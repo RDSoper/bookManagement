@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @RestController
 @AllArgsConstructor
@@ -30,12 +29,9 @@ public class BookController {
 
     @GetMapping("/{id}")
     //TODO: Change type to ResponseEntity<Book> when error handling done.
-    public ResponseEntity<Object> getBook(@PathVariable Long id){
-        try {
+    public ResponseEntity<Book> getBook(@PathVariable Long id){
             return new ResponseEntity<>(bookService.getBook(id), HttpStatus.OK);
-        }catch(NoSuchElementException e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
+
     }
 
     @PostMapping
@@ -43,7 +39,7 @@ public class BookController {
         return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id){
         bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.OK);
