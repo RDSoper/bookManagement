@@ -1,5 +1,6 @@
 package com.management.bookManagement.Controllers;
 
+import com.management.bookManagement.DTO.BookDTO;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Services.BookService;
 import lombok.AllArgsConstructor;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
+
+import static com.management.bookManagement.Utils.Mappers.mapBookToBookDTO;
 
 @RestController
 @AllArgsConstructor
@@ -24,18 +27,21 @@ public class BookController {
     BookService bookService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Book>> getBooks(){
-        return new ResponseEntity<>(bookService.getAllBooks(), HttpStatus.OK);
+    public ResponseEntity<List<BookDTO>> getBooks(){
+        List<Book> allBooks = bookService.getAllBooks();
+        List<BookDTO> allBookDTOs = new ArrayList<>();
+
+        for(Book book: allBooks){
+            allBookDTOs.add(mapBookToBookDTO(book));
+        }
+
+        return new ResponseEntity<>(allBookDTOs, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    //TODO: Change type to ResponseEntity<Book> when error handling done.
-    public ResponseEntity<Object> getBook(@PathVariable Long id){
-        try {
-            return new ResponseEntity<>(bookService.getBook(id), HttpStatus.OK);
-        }catch(NoSuchElementException e){
-            return new ResponseEntity<>(e.getMessage(),HttpStatus.NOT_FOUND);
-        }
+    //TODO: Error handling
+    public ResponseEntity<BookDTO> getBook(@PathVariable Long id){
+            return new ResponseEntity<>(mapBookToBookDTO(bookService.getBook(id)), HttpStatus.OK);
     }
 
     @PostMapping
@@ -43,10 +49,10 @@ public class BookController {
         return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id){
         bookService.deleteBook(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
