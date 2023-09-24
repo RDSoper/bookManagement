@@ -10,8 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@NoArgsConstructor
 public class AuthorDTO {
     private String name;
-    private List<BookDTO> books;
+    private List<AuthorBookDTO> books;
 }
