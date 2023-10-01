@@ -9,8 +9,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+
 
 @SpringBootApplication
 @AllArgsConstructor
@@ -27,35 +27,24 @@ public class BookManagementApplication implements CommandLineRunner{
 	//TODO: Delete this once the db is made persistent.
 	@Override
 	public void run(String... args) {
-		List<Author> ana = new ArrayList<>();
-		List<Book> booklist = new ArrayList<>();
-
-		Book boook = new Book(6L, "A", null, true, false, "Genre");
-		booklist.add(boook);
-
-		Author russell = new Author(1L, "Guillermo Del Toro", booklist);
-		Author anotherRussell = new Author(2L, "Chuck Hogan", booklist);
-		ana.add(russell);
-		ana.add(anotherRussell);
-		boook.setAuthor(ana);
-
+		Author russell = new Author(1L, "Guillermo Del Toro", new HashSet<>());
 		Book[] books = new Book[]{
-				new Book(1L,"The Strain", null, true, true, "Fiction"),
-				new Book(2L,"The Fall", null, true, true, "Fiction"),
-				new Book(3L,"The Night Eternal", null, true, true, "Fiction"),
-				new Book(4L,"A Awesome Title", null, false, false, "Non-Fiction"),
-				new Book(5L,"A Boring Title", null, false, true, "Fiction")
+				new Book(1L,"The Strain", new HashSet<>(), true, true, "Fiction"),
+				new Book(2L,"The Fall", new HashSet<>(), true, true, "Fiction"),
+				new Book(3L,"The Night Eternal", new HashSet<>(), true, true, "Fiction"),
+				new Book(4L,"A Awesome Title", new HashSet<>(), false, false, "Non-Fiction"),
+				new Book(5L,"A Boring Title", new HashSet<>(), false, true, "Fiction")
 
 		};
 
 
 		authorRepository.save(russell);
 		for(Book book:books){
-			book.setAuthor(ana);
-			russell.getBooks().add(book);
+			book.addAuthor(russell);
+			russell.addBook(book);
 			bookRepository.save(book);
-			authorRepository.save(russell);
 		}
+		authorRepository.save(russell);
 
 	}
 }
