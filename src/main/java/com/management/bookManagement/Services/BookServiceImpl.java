@@ -1,6 +1,7 @@
 package com.management.bookManagement.Services;
 
 
+import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Repositories.BookRepository;
 import lombok.AllArgsConstructor;
@@ -31,7 +32,11 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public void deleteBook(Long id) {
-        bookRepository.deleteById(id);
+        Book book = bookRepository.findById(id).get();
+        for(Author author:book.getAuthors()){
+            book.removeAuthor(author);
+        }
+        bookRepository.delete(book);
     }
 
     @Override
