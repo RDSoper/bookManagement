@@ -15,7 +15,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -33,10 +34,24 @@ public class Author {
 
     @JoinTable(
             name = "book_author",
-            joinColumns = @JoinColumn(name = "author_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id"))
-    @ManyToMany(cascade = CascadeType.ALL)
-    private List<Book> books;
+            joinColumns = @JoinColumn(name = "fk_author"),
+            inverseJoinColumns = @JoinColumn(name = "fk_book"))
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    private Set<Book> books  = new HashSet<>();
+
+
+    public void addBook(Book book) {
+        if(this.books == null ){
+            this.books = new HashSet<>();
+        }
+        this.books.add(book);
+        book.getAuthors().add(this);
+    }
+
+    public void removeBook(Book book){
+        this.books.remove(book);
+        book.getAuthors().remove(this);
+    }
 
     // The hashcode and equals methods were guided by this article
     // https://thorben-janssen.com/ultimate-guide-to-implementing-equals-and-hashcode-with-hibernate/
