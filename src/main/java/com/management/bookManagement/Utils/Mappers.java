@@ -6,23 +6,23 @@ import com.management.bookManagement.DTO.BookDTO;
 import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.Set;
 
 public class Mappers {
 
     public static BookDTO mapBookToBookDTO (Book book){
 
         BookDTO bookDTO = new BookDTO();
-        List<String> authorNames = new ArrayList<>();
+        Set<String> authorNames = new HashSet<>();
 
         bookDTO.setTitle(book.getTitle());
         bookDTO.setOwned(book.getOwned());
         bookDTO.setRead(book.getRead());
         bookDTO.setGenre(book.getGenre());
 
-        for(Author author: book.getAuthor()){
+        for(Author author: book.getAuthors()){
             authorNames.add(author.getName());
         }
 
@@ -33,7 +33,7 @@ public class Mappers {
 
     public static AuthorDTO mapAuthorToAuthorDTO (Author author){
         AuthorDTO authorDTO = new AuthorDTO();
-        List<AuthorBookDTO> authorBookDTOs = new ArrayList<>();
+        Set<AuthorBookDTO> authorBookDTOs = new HashSet<>();
 
         authorDTO.setName(author.getName());
 
