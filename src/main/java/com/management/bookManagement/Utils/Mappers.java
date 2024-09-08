@@ -7,7 +7,6 @@ import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class Mappers {
@@ -38,11 +37,11 @@ public class Mappers {
         authorDTO.setName(author.getName());
 
         for(Book book: author.getBooks()){
+            System.out.println("Mapping "+ book.getTitle());
             if(book.getTitle().split(" ")[0].equalsIgnoreCase("the")){
                 handleTheInBookTitle(book);
             }
             AuthorBookDTO bookDTO = new AuthorBookDTO();
-            System.out.println("Mapping "+ book.getTitle());
             bookDTO.setTitle(book.getTitle());
             bookDTO.setOwned(book.getOwned());
             bookDTO.setRead(book.getRead());
