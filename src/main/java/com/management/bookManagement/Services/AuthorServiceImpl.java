@@ -16,7 +16,8 @@ public class AuthorServiceImpl implements AuthorService {
 
     @Override
     public List<Author> getAuthors() {
-        return (List<Author>) authorRepository.findAll();
+        List<Author> authors = authorRepository.findAll();
+        return authors;
     }
 
     @Override
