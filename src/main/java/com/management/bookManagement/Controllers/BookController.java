@@ -1,9 +1,12 @@
 package com.management.bookManagement.Controllers;
 
+import com.management.bookManagement.DTO.BookAuthorDTO;
 import com.management.bookManagement.DTO.BookDTO;
+import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Services.BookService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +28,7 @@ import static com.management.bookManagement.Utils.Mappers.mapBookToBookDTO;
 public class BookController {
 
     BookService bookService;
+    ModelMapper modelMapper;
 
     @GetMapping("/all")
     public ResponseEntity<List<BookDTO>> getBooks(){
@@ -45,8 +49,14 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<Book> saveBook(@RequestBody Book book){
-        return new ResponseEntity<>(bookService.saveBook(book), HttpStatus.OK);
+    public ResponseEntity<BookAuthorDTO> saveBook(@RequestBody Book book) {
+        if (book.getAuthors() != null) {
+            for (Author author : book.getAuthors()) {
+                author.getBooks().add(book);
+            }
+        }
+        Book newBook = bookService.saveBook(book);
+        return new ResponseEntity<>(modelMapper.map(newBook, BookAuthorDTO.class), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

@@ -5,6 +5,7 @@ import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Repositories.BookRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +15,7 @@ import java.util.List;
 public class BookServiceImpl implements BookService{
 
     BookRepository bookRepository;
+    ModelMapper modelMapper;
 
     @Override
     public List<Book> getAllBooks(){
@@ -27,13 +29,13 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Book getBook(Long id){
-        return bookRepository.findById(id).get();
+        return bookRepository.findById(id).orElseThrow();
     }
 
     @Override
     public void deleteBook(Long id) {
-        Book book = bookRepository.findById(id).get();
-        for(Author author:book.getAuthors()){
+        Book book = bookRepository.findById(id).orElseThrow();
+        for(Author author: book.getAuthors()){
             book.removeAuthor(author);
         }
         bookRepository.delete(book);
