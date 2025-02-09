@@ -35,8 +35,7 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-
-    @ManyToMany(mappedBy = "books", cascade = CascadeType.PERSIST)
+    @ManyToMany(mappedBy = "books", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Author> authors;
 
     @Column(name = "read")
@@ -78,6 +77,6 @@ public class Book {
         if (getClass() != obj.getClass())
             return false;
         Book other = (Book) obj;
-        return id != null && id.equals(other.getId());
+        return title != null && title.equals(other.getTitle());
     }
 }
