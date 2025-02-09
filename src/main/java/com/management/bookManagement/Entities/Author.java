@@ -36,7 +36,7 @@ public class Author {
             name = "book_author",
             joinColumns = @JoinColumn(name = "fk_author"),
             inverseJoinColumns = @JoinColumn(name = "fk_book"))
-    @ManyToMany(cascade = CascadeType.PERSIST)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private Set<Book> books  = new HashSet<>();
 
 
@@ -69,6 +69,6 @@ public class Author {
         if (getClass() != obj.getClass())
             return false;
         Author other = (Author) obj;
-        return id != null && id.equals(other.getId());
+        return name != null && name.equals(other.getName());
     }
 }

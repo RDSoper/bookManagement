@@ -10,4 +10,5 @@ public interface AuthorService {
     List<Author> getAuthors();
     Author saveAuthor(Author author);
     Author getAuthor(Long id);
+    Author getAuthorByName(String name);
 }
