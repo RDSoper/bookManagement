@@ -1,9 +1,11 @@
 package com.management.bookManagement.Services;
 
 
+import com.management.bookManagement.DTO.AuthorDTO;
 import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Repositories.AuthorRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +15,7 @@ import java.util.List;
 public class AuthorServiceImpl implements AuthorService {
 
     AuthorRepository authorRepository;
+    ModelMapper modelMapper;
 
     @Override
     public List<Author> getAuthors() {
@@ -25,8 +28,8 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author getAuthor(Long id) {
-        return authorRepository.findById(id).orElseThrow();
+    public AuthorDTO getAuthor(Long id) {
+        return modelMapper.map(authorRepository.findById(id).orElseThrow(), AuthorDTO.class);
     }
 
     @Override

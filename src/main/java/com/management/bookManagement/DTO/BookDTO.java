@@ -13,7 +13,7 @@ import java.util.Set;
 public class BookDTO {
 
     private String title;
-    private Set<String> author;
+    private Set<String> authors;
     private Boolean read;
     private Boolean owned;
     private String genre;

@@ -42,8 +42,8 @@ public class AuthorController {
 
     @GetMapping("author/{id}")
     public ResponseEntity<AuthorDTO> getAuthor(@PathVariable Long id){
-        Author author = authorService.getAuthor(id);
-        return ResponseEntity.ok(modelMapper.map(author, AuthorDTO.class));
+        AuthorDTO author = authorService.getAuthor(id);
+        return ResponseEntity.ok(author);
     }
 
     @PostMapping("author")
