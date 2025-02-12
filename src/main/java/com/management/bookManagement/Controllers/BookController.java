@@ -1,8 +1,6 @@
 package com.management.bookManagement.Controllers;
 
-import com.management.bookManagement.DTO.BookAuthorDTO;
 import com.management.bookManagement.DTO.BookDTO;
-import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Services.BookService;
 import lombok.AllArgsConstructor;
@@ -49,14 +47,9 @@ public class BookController {
     }
 
     @PostMapping
-    public ResponseEntity<BookAuthorDTO> saveBook(@RequestBody Book book) {
-        if (book.getAuthors() != null) {
-            for (Author author : book.getAuthors()) {
-                author.getBooks().add(book);
-            }
-        }
-        Book newBook = bookService.saveBook(book);
-        return new ResponseEntity<>(modelMapper.map(newBook, BookAuthorDTO.class), HttpStatus.OK);
+    public ResponseEntity<BookDTO> saveBook(@RequestBody Book book) {
+        BookDTO newBook = bookService.saveBook(book);
+        return new ResponseEntity<>(newBook, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

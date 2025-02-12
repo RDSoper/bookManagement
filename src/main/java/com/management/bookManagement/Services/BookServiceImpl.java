@@ -1,6 +1,7 @@
 package com.management.bookManagement.Services;
 
 
+import com.management.bookManagement.DTO.BookDTO;
 import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Repositories.BookRepository;
@@ -23,8 +24,16 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Book saveBook(Book book) {
-        return bookRepository.save(book);
+    public BookDTO saveBook(Book book) {
+        if (book.getAuthors() != null) {
+            for (Author author : book.getAuthors()) {
+                author.addBook(book);
+            }
+        }
+        String title = handleTheInBookTitle(book.getTitle());
+        book.setTitle(title);
+
+        return modelMapper.map(bookRepository.save(book), BookDTO.class);
     }
 
     @Override
@@ -46,5 +55,10 @@ public class BookServiceImpl implements BookService{
         return bookRepository.findByTitle(title);
     }
 
+    private String handleTheInBookTitle(String title) {
+        return (title != null && !title.isEmpty() && title.toLowerCase().startsWith("the "))
+                ? title.substring(4) + ", The"
+                : title;
+    }
 
 }
