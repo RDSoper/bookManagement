@@ -15,10 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.management.bookManagement.Utils.Mappers.mapBookToBookDTO;
 
 @RestController
 @AllArgsConstructor
@@ -29,27 +26,22 @@ public class BookController {
     ModelMapper modelMapper;
 
     @GetMapping("/all")
-    public ResponseEntity<List<BookDTO>> getBooks(){
-        List<Book> allBooks = bookService.getAllBooks();
-        List<BookDTO> allBookDTOs = new ArrayList<>();
-
-        for(Book book: allBooks){
-            allBookDTOs.add(mapBookToBookDTO(book));
-        }
-
-        return new ResponseEntity<>(allBookDTOs, HttpStatus.OK);
+    public ResponseEntity<List<BookDTO>> getAllBooks(){
+        List<BookDTO> books = bookService.getAllBooks();
+        return ResponseEntity.ok(books);
     }
 
     @GetMapping("/{id}")
     //TODO: Error handling
     public ResponseEntity<BookDTO> getBook(@PathVariable Long id){
-            return new ResponseEntity<>(mapBookToBookDTO(bookService.getBook(id)), HttpStatus.OK);
+        BookDTO book = bookService.getBook(id);
+        return ResponseEntity.ok(book);
     }
 
     @PostMapping
     public ResponseEntity<BookDTO> saveBook(@RequestBody Book book) {
         BookDTO newBook = bookService.saveBook(book);
-        return new ResponseEntity<>(newBook, HttpStatus.OK);
+        return ResponseEntity.ok(newBook);
     }
 
     @DeleteMapping("/{id}")
