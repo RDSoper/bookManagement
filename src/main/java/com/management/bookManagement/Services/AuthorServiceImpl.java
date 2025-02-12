@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,13 +19,19 @@ public class AuthorServiceImpl implements AuthorService {
     ModelMapper modelMapper;
 
     @Override
-    public List<Author> getAuthors() {
-        return authorRepository.findAll();
+    public List<AuthorDTO> getAuthors() {
+        List<Author> authors = authorRepository.findAll();
+        List<AuthorDTO> authorDTOs = new ArrayList<>();
+        for(Author author:authors){
+            authorDTOs.add(modelMapper.map(author, AuthorDTO.class));
+        }
+        return authorDTOs;
     }
 
     @Override
-    public Author saveAuthor(Author author) {
-        return authorRepository.save(author);
+    public AuthorDTO saveAuthor(Author author) {
+        Author savedAuthor = authorRepository.save(author);
+        return modelMapper.map(savedAuthor, AuthorDTO.class);
     }
 
     @Override

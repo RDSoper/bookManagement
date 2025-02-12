@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -19,8 +20,13 @@ public class BookServiceImpl implements BookService{
     ModelMapper modelMapper;
 
     @Override
-    public List<Book> getAllBooks(){
-        return bookRepository.findAllByOrderByTitleAsc();
+    public List<BookDTO> getAllBooks(){
+        List<Book> books = bookRepository.findAllByOrderByTitleAsc();
+        List<BookDTO> bookDTOs = new ArrayList<>();
+        for(Book book: books){
+            bookDTOs.add(modelMapper.map(book, BookDTO.class));
+        }
+        return bookDTOs;
     }
 
     @Override
@@ -37,8 +43,9 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public Book getBook(Long id){
-        return bookRepository.findById(id).orElseThrow();
+    public BookDTO getBook(Long id){
+        Book book = bookRepository.findById(id).orElseThrow();
+        return modelMapper.map(book, BookDTO.class);
     }
 
     @Override
