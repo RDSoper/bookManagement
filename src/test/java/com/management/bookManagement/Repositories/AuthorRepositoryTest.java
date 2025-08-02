@@ -12,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
 import java.util.HashSet;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -50,7 +51,7 @@ class AuthorRepositoryTest {
         Book book = result.getBooks().stream().toList().get(0);
         assertThat(book.getId()).isEqualTo(1L);
         assertThat(book.getTitle()).isEqualTo("Book1");
-        assertThat(book.getAuthors().stream().toList().get(0).getName()).isEqualTo("author1");
+        assertThat(book.getAuthors()).extracting(Author::getName).isEqualTo(List.of("author1"));
         assertThat(book.getRead()).isTrue();
         assertThat(book.getOwned()).isFalse();
         assertThat(book.getGenre()).isEqualTo("A genre");
