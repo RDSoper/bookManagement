@@ -25,14 +25,14 @@ class AuthorRepositoryTest {
 
     @BeforeEach
     void setup() {
-        Book book = new Book(1L, "Book1", new HashSet<>(), true, false, "A genre");
-        Author author = new Author(1L, "author1", new HashSet<>());
+        Book book = new Book(null, "Book1", new HashSet<>(), true, false, "A genre");
+        Author author = new Author(null, "author1", new HashSet<>());
         author.getBooks().add(book);
         book.getAuthors().add(author);
         authorRepository.save(author);
-        authorRepository.save(new Author(2L, "author2", new HashSet<>()));
-        authorRepository.save(new Author(3L, "author3", new HashSet<>()));
-        authorRepository.save(new Author(4L, "author4", new HashSet<>()));
+        authorRepository.save(new Author(null, "author2", new HashSet<>()));
+        authorRepository.save(new Author(null, "author3", new HashSet<>()));
+        authorRepository.save(new Author(null, "author4", new HashSet<>()));
     }
 
     @AfterEach
@@ -48,7 +48,7 @@ class AuthorRepositoryTest {
         assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getBooks().size()).isEqualTo(1);
 
-        Book book = result.getBooks().stream().toList().get(0);
+        Book book = result.getBooks().stream().toList().getFirst();
         assertThat(book.getId()).isEqualTo(1L);
         assertThat(book.getTitle()).isEqualTo("Book1");
         assertThat(book.getAuthors()).extracting(Author::getName).isEqualTo(List.of("author1"));
