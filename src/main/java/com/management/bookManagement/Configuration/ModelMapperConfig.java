@@ -7,7 +7,6 @@ import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.spi.MappingContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,42 +20,31 @@ public class ModelMapperConfig {
     public ModelMapper modelMapper() {
         ModelMapper modelMapper = new ModelMapper();
 
-        Converter<Set<Author>, Set<String>> bookAuthorConverter = new Converter<>() {
-            @Override
-            public Set<String> convert(MappingContext<Set<Author>, Set<String>> context) {
-                Set<Author> authors = context.getSource();
-                return mapAuthorToDto(authors);
-            }
+        Converter<Set<Author>, Set<String>> bookAuthorToAuthorNameConverter = context -> {
+            Set<Author> authors = context.getSource();
+            return mapAuthorToAuthorDto(authors);
         };
 
-        Converter<Author, AuthorDTO> authorBookConverter = new Converter<Author, AuthorDTO>() {
-            @Override
-            public AuthorDTO convert(MappingContext<Author, AuthorDTO> context) {
-                Author author = context.getSource();
-                AuthorDTO authorDTO = new AuthorDTO();
-                authorDTO.setName(author.getName());
-                authorDTO.setBooks(mapAuthorBooksToAuthorBooksDto(author.getBooks()));
-                return authorDTO;
-            }
+        Converter<Set<Book>, Set<AuthorBookDTO>> authorBooksConverter = context -> {
+            Set<Book> books = context.getSource();
+            return mapBookToAuthorBookDTOConverter(books);
         };
 
-        modelMapper.addConverter(bookAuthorConverter);
-        modelMapper.addConverter(authorBookConverter);
+        modelMapper.addConverter(bookAuthorToAuthorNameConverter);
+        modelMapper.addConverter(authorBooksConverter);
 
         modelMapper.typeMap(Book.class, BookDTO.class).addMappings(mapper -> {
-            mapper.using(bookAuthorConverter).map(Book::getAuthors, BookDTO::setAuthors);
+            mapper.using(bookAuthorToAuthorNameConverter).map(Book::getAuthors, BookDTO::setAuthors);
             mapper.map(Book::getTitle, (bookDTO, o) -> bookDTO.setTitle(handleTheInBookTitle((String) o)));
         });
 
-        modelMapper.typeMap(Author.class, AuthorDTO.class).addMappings(mapper ->{
-            mapper.using(authorBookConverter).map(Author::getBooks, AuthorDTO::setBooks);
-        });
-
+        modelMapper.typeMap(Author.class, AuthorDTO.class).addMappings(mapper ->
+            mapper.using(authorBooksConverter).map(Author::getBooks, AuthorDTO::setBooks));
 
         return modelMapper;
     }
 
-    private Set<String> mapAuthorToDto(Set<Author> authors) {
+    private Set<String> mapAuthorToAuthorDto(Set<Author> authors) {
         Set<String> authorNames = new HashSet<>();
         if (authors != null) {
             for (Author author : authors) {
@@ -66,7 +54,7 @@ public class ModelMapperConfig {
         return authorNames;
     }
 
-    private Set<AuthorBookDTO> mapAuthorBooksToAuthorBooksDto(Set<Book> books) {
+    private Set<AuthorBookDTO> mapBookToAuthorBookDTOConverter(Set<Book> books) {
         Set<AuthorBookDTO> authorBooks = new HashSet<>();
         if(books != null) {
             for(Book book: books) {
@@ -83,7 +71,7 @@ public class ModelMapperConfig {
     }
 
     private String handleTheInBookTitle(String title) {
-        return (title != null && !title.isEmpty() && title.toLowerCase().startsWith("the "))
+        return (title != null && !title.isBlank() && title.toLowerCase().startsWith("the "))
                 ? title.substring(4) + ", The"
                 : title;
     }
