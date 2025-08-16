@@ -36,8 +36,6 @@ public class BookServiceImpl implements BookService{
                 author.addBook(book);
             }
         }
-        String title = handleTheInBookTitle(book.getTitle());
-        book.setTitle(title);
 
         return modelMapper.map(bookRepository.save(book), BookDTO.class);
     }
@@ -61,11 +59,4 @@ public class BookServiceImpl implements BookService{
     public Book getBook(String title) {
         return bookRepository.findByTitle(title);
     }
-
-    private String handleTheInBookTitle(String title) {
-        return (title != null && !title.isEmpty() && title.toLowerCase().startsWith("the "))
-                ? title.substring(4) + ", The"
-                : title;
-    }
-
 }

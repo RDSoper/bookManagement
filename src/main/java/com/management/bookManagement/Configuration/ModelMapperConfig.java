@@ -30,12 +30,18 @@ public class ModelMapperConfig {
             return mapBookToAuthorBookDTOConverter(books);
         };
 
+        Converter<String, String> bookTitleConverter = context -> {
+            String title = context.getSource();
+            return handleTheInBookTitle(title);
+        };
+
         modelMapper.addConverter(bookAuthorToAuthorNameConverter);
         modelMapper.addConverter(authorBooksConverter);
+        modelMapper.addConverter(bookTitleConverter);
 
         modelMapper.typeMap(Book.class, BookDTO.class).addMappings(mapper -> {
             mapper.using(bookAuthorToAuthorNameConverter).map(Book::getAuthors, BookDTO::setAuthors);
-            mapper.map(Book::getTitle, (bookDTO, o) -> bookDTO.setTitle(handleTheInBookTitle((String) o)));
+            mapper.using(bookTitleConverter).map(Book::getTitle, BookDTO::setTitle);
         });
 
         modelMapper.typeMap(Author.class, AuthorDTO.class).addMappings(mapper ->

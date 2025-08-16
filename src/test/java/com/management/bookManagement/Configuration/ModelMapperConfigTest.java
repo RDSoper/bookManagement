@@ -24,6 +24,18 @@ class ModelMapperConfigTest {
     ModelMapper modelMapper;
 
     @Test
+    void testTitleHandledCorrectly() {
+        Book book1 = new Book(1L, "The best book ever", new HashSet<>(), true, true, "");
+        Book book2 = new Book(1L, "Best, the best and nothing but the best book ever", new HashSet<>(), true, true, "");
+
+        BookDTO book1Result = modelMapper.map(book1, BookDTO.class);
+        BookDTO book2Result = modelMapper.map(book2, BookDTO.class);
+
+        assertThat(book1Result.getTitle()).isEqualTo("best book ever, The");
+        assertThat(book2Result.getTitle()).isEqualTo("Best, the best and nothing but the best book ever");
+    }
+
+    @Test
     void testBookMapsAuthorCorrectly() {
 
         Book book =  new Book(1L, "The Title is incredible", new HashSet<>(), true, true, "Genre");
@@ -58,7 +70,7 @@ class ModelMapperConfigTest {
 
     @Test
     void testMapperCanHandleNullValuesForAuthor() {
-        Book book =  new Book(1L, "The Title is incredible", new HashSet<>(), true, true, "Genre");
+        Book book =  new Book(1L, "The Title is incredible", null, true, true, "Genre");
         BookDTO result = modelMapper.map(book, BookDTO.class);
 
         assertThat(result.getAuthors()).isEmpty();
@@ -66,7 +78,7 @@ class ModelMapperConfigTest {
 
     @Test
     void testMapperCanHandleNullValuesForBook() {
-        Author author = new Author(1L, "Great author", new HashSet<>());
+        Author author = new Author(1L, "Great author", null);
         AuthorDTO result = modelMapper.map(author, AuthorDTO.class);
 
         List<AuthorBookDTO> books = result.getBooks().stream().toList();
