@@ -40,7 +40,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public Author getAuthorByName(String name) {
-        return authorRepository.findByNameIs(name);
+    public AuthorDTO getAuthorByName(String name) {
+        return modelMapper.map(authorRepository.findByNameIs(name), AuthorDTO.class);
     }
 }
