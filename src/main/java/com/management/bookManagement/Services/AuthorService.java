@@ -11,5 +11,5 @@ public interface AuthorService {
     List<AuthorDTO> getAuthors();
     AuthorDTO saveAuthor(Author author);
     AuthorDTO getAuthor(Long id);
-    Author getAuthorByName(String name);
+    AuthorDTO getAuthorByName(String name);
 }
