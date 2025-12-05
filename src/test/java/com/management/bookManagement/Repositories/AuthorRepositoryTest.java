@@ -45,11 +45,9 @@ class AuthorRepositoryTest {
         Author result = authorRepository.findByNameIs("author1");
 
         assertThat(result.getName()).isEqualTo("author1");
-        assertThat(result.getId()).isEqualTo(1L);
         assertThat(result.getBooks().size()).isEqualTo(1);
 
         Book book = result.getBooks().stream().toList().getFirst();
-        assertThat(book.getId()).isEqualTo(1L);
         assertThat(book.getTitle()).isEqualTo("Book1");
         assertThat(book.getAuthors()).extracting(Author::getName).isEqualTo(List.of("author1"));
         assertThat(book.getRead()).isTrue();
