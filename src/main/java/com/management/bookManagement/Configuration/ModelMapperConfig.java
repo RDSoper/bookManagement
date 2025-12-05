@@ -35,6 +35,9 @@ public class ModelMapperConfig {
             return handleTheInBookTitle(title);
         };
 
+        modelMapper.createTypeMap(String.class, String.class)
+                .setConverter(bookTitleConverter);
+
         modelMapper.addConverter(bookAuthorToAuthorNameConverter);
         modelMapper.addConverter(authorBooksConverter);
         modelMapper.addConverter(bookTitleConverter);

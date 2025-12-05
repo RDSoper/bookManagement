@@ -57,6 +57,9 @@ public class BookServiceImpl implements BookService{
 
     @Override
     public Book getBook(String title) {
-        return bookRepository.findByTitle(title);
+        Book book = bookRepository.findByTitle(title);
+        book.setTitle(modelMapper.map(book.getTitle(), String.class));
+
+        return book;
     }
 }
