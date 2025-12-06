@@ -1,0 +1,11 @@
+{
+  "name": "SomeAuthor",
+  "books": [
+    {
+      "title": "The Fall",
+      "read": true,
+      "owned": true,
+      "genre": "Fiction"
+    }
+  ]
+}

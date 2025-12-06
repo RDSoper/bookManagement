@@ -1,0 +1,23 @@
+[
+  {
+    "title":"book1",
+    "authors":["book1 author"],
+    "read":null,
+    "owned":null,
+    "genre":null
+  },
+  {
+    "title":"book2",
+    "authors":["book2 author"],
+    "read":null,
+    "owned":null,
+    "genre":null
+  },
+  {
+    "title":"book3",
+    "authors":["book3 author"],
+    "read":null,
+    "owned":null,
+    "genre":null
+  }
+]

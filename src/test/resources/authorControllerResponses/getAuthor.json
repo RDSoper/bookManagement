@@ -1,0 +1,11 @@
+{
+  "name":"author1",
+  "books": [
+    {
+      "title":"author1 book",
+      "read":null,
+      "owned":null,
+      "genre":null
+    }
+  ]
+}
