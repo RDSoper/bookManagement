@@ -67,10 +67,10 @@ class BookServiceImplTest {
     }
 
     @Test
-    void testGetAllBooks_getsAllBooks() {
+    void testGetAllBooks_getsBooks() {
         when(bookRepository.findAllByOrderByTitleAsc()).thenReturn(List.of(book1, book2, book3));
 
-        List<BookDTO> books = bookService.getAllBooks();
+        List<BookDTO> books = bookService.getBooks();
 
         assertThat(books.size()).isEqualTo(3);
         assertThat(books).extracting(BookDTO::getTitle).isEqualTo(List.of("book1, The", "book2", "book3"));

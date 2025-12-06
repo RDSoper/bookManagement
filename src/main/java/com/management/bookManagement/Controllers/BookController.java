@@ -19,19 +19,19 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("book")
+@RequestMapping("/")
 public class BookController {
 
     BookService bookService;
     ModelMapper modelMapper;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<BookDTO>> getAllBooks(){
-        List<BookDTO> books = bookService.getAllBooks();
+    @GetMapping("books")
+    public ResponseEntity<List<BookDTO>> getBooks(){
+        List<BookDTO> books = bookService.getBooks();
         return ResponseEntity.ok(books);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     //TODO: Error handling
     public ResponseEntity<BookDTO> getBook(@PathVariable Long id){
         BookDTO book = bookService.getBook(id);
@@ -44,7 +44,7 @@ public class BookController {
         return ResponseEntity.ok(newBook);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<HttpStatus> deleteBook(@PathVariable Long id){
         bookService.deleteBook(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);

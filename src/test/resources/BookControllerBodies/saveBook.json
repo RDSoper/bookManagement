@@ -1,0 +1,19 @@
+{
+  "title": "the A BOOKS",
+  "authors":[
+    {
+      "name": "Ruer A",
+      "books": [
+        {
+          "title": "Another books",
+          "read": true,
+          "owned": false,
+          "genre": "fiction"
+        }
+      ]
+    }
+  ],
+  "read":true,
+  "owned":false,
+  "genre":"fiction"
+}

@@ -19,7 +19,7 @@ public class BookServiceImpl implements BookService{
     ModelMapper modelMapper;
 
     @Override
-    public List<BookDTO> getAllBooks(){
+    public List<BookDTO> getBooks(){
         List<Book> books = bookRepository.findAllByOrderByTitleAsc();
         List<BookDTO> bookDTOs = new ArrayList<>();
         for(Book book: books){
