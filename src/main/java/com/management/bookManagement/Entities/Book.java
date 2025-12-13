@@ -1,7 +1,5 @@
 package com.management.bookManagement.Entities;
 
-
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

@@ -50,7 +50,7 @@ class AuthorControllerTest {
     @Test
     void getAuthors() throws Exception {
         when(authorService.getAuthors()).thenReturn(List.of(author1, author2, author3));
-        String expectedJson = getFile("authorControllerResponses/getAuthors.json");
+        String expectedJson = getFile("AuthorController/authorControllerResponses/getAuthors.json");
 
         mvc.perform(get("/authors"))
                 .andExpect(status().isOk())
@@ -61,7 +61,7 @@ class AuthorControllerTest {
     @Test
     void getAuthor() throws Exception {
         when(authorService.getAuthor(1L)).thenReturn(author1);
-        String expectedJson = getFile("authorControllerResponses/getAuthor.json");
+        String expectedJson = getFile("AuthorController/authorControllerResponses/getAuthor.json");
 
         mvc.perform(get("/author/1"))
                 .andExpect(status().isOk())
@@ -72,8 +72,8 @@ class AuthorControllerTest {
     @Test
     void saveAuthor() throws Exception {
         when(authorService.saveAuthor(any(Author.class))).thenReturn(author1);
-        String expectedJson = getFile("authorControllerResponses/getAuthor.json");
-        String author = getFile("authorControllerBodies/saveAuthor.json");;
+        String expectedJson = getFile("AuthorController/authorControllerResponses/getAuthor.json");
+        String author = getFile("AuthorController/authorControllerBodies/saveAuthor.json");;
 
         mvc.perform(post("/author")
                         .contentType("application/json")
