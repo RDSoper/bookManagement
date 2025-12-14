@@ -34,7 +34,7 @@ public class Book {
     private String title;
 
     @ManyToMany(mappedBy = "books", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
     @Column(name = "read")
     private Boolean read;
@@ -47,7 +47,7 @@ public class Book {
 
 
     public void addAuthor(Author author) {
-        if(this.authors == null ){
+        if(this.authors == null) {
             this.authors = new HashSet<>();
         }
         this.authors.add(author);

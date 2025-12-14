@@ -41,7 +41,7 @@ public class Author {
 
 
     public void addBook(Book book) {
-        if(this.books == null ){
+        if(this.books == null ) {
             this.books = new HashSet<>();
         }
         this.books.add(book);
