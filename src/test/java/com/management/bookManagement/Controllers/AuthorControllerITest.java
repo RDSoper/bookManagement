@@ -10,16 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Transactional
 @SpringBootTest
-@Sql(scripts = "/AuthorController/AuthorControllerITestSetup.sql")
+@Sql(scripts = "/AuthorController/AuthorControllerITestSetup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/AuthorController/authorControllerTearDown.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class AuthorControllerITest {
 
     @Autowired
@@ -33,10 +32,10 @@ class AuthorControllerITest {
         List<AuthorDTO> body = result.getBody();
         assertThat(body.size()).isEqualTo(2);
 
-        var firstAuthor = body.getFirst();
+        AuthorDTO firstAuthor = body.getFirst();
         assertThat(firstAuthor.getName()).isEqualTo("Jane Doe");
 
-        List<AuthorBookDTO> firstAuthorBook = firstAuthor.getBooks().stream().toList();
+        List<AuthorBookDTO> firstAuthorBook = new ArrayList<>(firstAuthor.getBooks());
         assertThat(firstAuthorBook.getFirst().getTitle()).isEqualTo("title, The");
         assertThat(firstAuthorBook.getFirst().getRead()).isEqualTo(false);
         assertThat(firstAuthorBook.getFirst().getOwned()).isEqualTo(true);
@@ -45,7 +44,7 @@ class AuthorControllerITest {
         AuthorDTO lastAuthor = body.getLast();
         assertThat(lastAuthor.getName()).isEqualTo("John Smith");
 
-       var lastAuthorBook = lastAuthor.getBooks().stream().toList();
+        List<AuthorBookDTO> lastAuthorBook = new ArrayList<>(lastAuthor.getBooks());
         assertThat(lastAuthorBook.getFirst().getTitle()).isEqualTo("A title again");
         assertThat(lastAuthorBook.getFirst().getRead()).isEqualTo(true);
         assertThat(lastAuthorBook.getFirst().getOwned()).isEqualTo(false);
@@ -60,7 +59,7 @@ class AuthorControllerITest {
         AuthorDTO body = result.getBody();
         assertThat(body.getName()).isEqualTo("Jane Doe");
 
-        List<AuthorBookDTO> firstAuthorBook = body.getBooks().stream().toList();
+        List<AuthorBookDTO> firstAuthorBook = new ArrayList<>(body.getBooks());
         assertThat(firstAuthorBook.getFirst().getTitle()).isEqualTo("title, The");
         assertThat(firstAuthorBook.getFirst().getRead()).isEqualTo(false);
         assertThat(firstAuthorBook.getFirst().getOwned()).isEqualTo(true);
@@ -68,14 +67,32 @@ class AuthorControllerITest {
     }
 
     @Test
-    void saveAuthor() {
+    void saveAuthor_savesAuthor() {
         Author author = setupAuthor();
 
         ResponseEntity<AuthorDTO> result = authorController.saveAuthor(author);
         assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(result.getBody().getName()).isEqualTo("Saved author");
 
-        List<AuthorBookDTO> book = result.getBody().getBooks().stream().toList();
+        List<AuthorBookDTO> book = new ArrayList<>(result.getBody().getBooks());
         assertThat(book.getFirst().getTitle()).isEqualTo("Saved author book");
+    }
+
+    @Test
+    void saveAuthor_doesNotAddDuplicateBooks() {
+        Author author = setupAuthor();
+
+        ResponseEntity<AuthorDTO> result = authorController.saveAuthor(author);
+        assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(result.getBody().getName()).isEqualTo("Saved author");
+
+        List<AuthorBookDTO> book = new ArrayList<>(result.getBody().getBooks());
+        assertThat(book.getFirst().getTitle()).isEqualTo("Saved author book");
+
+        Author sameAuthorAgain = setupAuthor();
+        ResponseEntity<AuthorDTO> sameAuthor = authorController.saveAuthor(sameAuthorAgain);
+        assertThat(sameAuthor.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
+        assertThat(sameAuthor.getBody().getBooks().size()).isEqualTo(1);
     }
 
     private Author setupAuthor() {
@@ -84,9 +101,8 @@ class AuthorControllerITest {
 
         Book book = new Book();
         book.setTitle("Saved author book");
-        author.setBooks(Set.of(book));
-        book.setAuthors(Set.of(author));
 
+        author.addBook(book);
         return author;
     }
 }
