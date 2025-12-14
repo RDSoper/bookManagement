@@ -32,7 +32,7 @@ class AuthorControllerITest {
         List<AuthorDTO> body = result.getBody();
         assertThat(body.size()).isEqualTo(2);
 
-        var firstAuthor = body.getFirst();
+        AuthorDTO firstAuthor = body.getFirst();
         assertThat(firstAuthor.getName()).isEqualTo("Jane Doe");
 
         List<AuthorBookDTO> firstAuthorBook = new ArrayList<>(firstAuthor.getBooks());
@@ -44,7 +44,7 @@ class AuthorControllerITest {
         AuthorDTO lastAuthor = body.getLast();
         assertThat(lastAuthor.getName()).isEqualTo("John Smith");
 
-       var lastAuthorBook = new ArrayList<>(lastAuthor.getBooks());
+        List<AuthorBookDTO> lastAuthorBook = new ArrayList<>(lastAuthor.getBooks());
         assertThat(lastAuthorBook.getFirst().getTitle()).isEqualTo("A title again");
         assertThat(lastAuthorBook.getFirst().getRead()).isEqualTo(true);
         assertThat(lastAuthorBook.getFirst().getOwned()).isEqualTo(false);
@@ -90,7 +90,7 @@ class AuthorControllerITest {
         assertThat(book.getFirst().getTitle()).isEqualTo("Saved author book");
 
         Author sameAuthorAgain = setupAuthor();
-        var sameAuthor = authorController.saveAuthor(sameAuthorAgain);
+        ResponseEntity<AuthorDTO> sameAuthor = authorController.saveAuthor(sameAuthorAgain);
         assertThat(sameAuthor.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
         assertThat(sameAuthor.getBody().getBooks().size()).isEqualTo(1);
     }
