@@ -1,7 +1,5 @@
 package com.management.bookManagement.Entities;
 
-
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,6 +21,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "book")
@@ -36,7 +36,7 @@ public class Book {
     private String title;
 
     @ManyToMany(mappedBy = "books", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private Set<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
     @Column(name = "read")
     private Boolean read;
@@ -49,7 +49,7 @@ public class Book {
 
 
     public void addAuthor(Author author) {
-        if(this.authors == null ){
+        if(this.authors == null) {
             this.authors = new HashSet<>();
         }
         this.authors.add(author);

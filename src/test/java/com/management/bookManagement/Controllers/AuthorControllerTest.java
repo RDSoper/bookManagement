@@ -7,8 +7,7 @@ import com.management.bookManagement.Services.AuthorServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,8 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(AuthorController.class)
 class AuthorControllerTest {
 
     @Autowired
@@ -50,7 +48,7 @@ class AuthorControllerTest {
     @Test
     void getAuthors() throws Exception {
         when(authorService.getAuthors()).thenReturn(List.of(author1, author2, author3));
-        String expectedJson = getFile("authorControllerResponses/getAuthors.json");
+        String expectedJson = getFile("AuthorController/authorControllerResponses/getAuthors.json");
 
         mvc.perform(get("/authors"))
                 .andExpect(status().isOk())
@@ -61,7 +59,7 @@ class AuthorControllerTest {
     @Test
     void getAuthor() throws Exception {
         when(authorService.getAuthor(1L)).thenReturn(author1);
-        String expectedJson = getFile("authorControllerResponses/getAuthor.json");
+        String expectedJson = getFile("AuthorController/authorControllerResponses/getAuthor.json");
 
         mvc.perform(get("/author/1"))
                 .andExpect(status().isOk())
@@ -72,8 +70,8 @@ class AuthorControllerTest {
     @Test
     void saveAuthor() throws Exception {
         when(authorService.saveAuthor(any(Author.class))).thenReturn(author1);
-        String expectedJson = getFile("authorControllerResponses/getAuthor.json");
-        String author = getFile("authorControllerBodies/saveAuthor.json");;
+        String expectedJson = getFile("AuthorController/authorControllerResponses/getAuthor.json");
+        String author = getFile("AuthorController/authorControllerBodies/saveAuthor.json");
 
         mvc.perform(post("/author")
                         .contentType("application/json")

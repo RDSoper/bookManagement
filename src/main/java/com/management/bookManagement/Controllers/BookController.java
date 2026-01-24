@@ -4,7 +4,6 @@ import com.management.bookManagement.DTO.BookDTO;
 import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Services.BookService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +22,6 @@ import java.util.List;
 public class BookController {
 
     BookService bookService;
-    ModelMapper modelMapper;
 
     @GetMapping("books")
     public ResponseEntity<List<BookDTO>> getBooks(){
