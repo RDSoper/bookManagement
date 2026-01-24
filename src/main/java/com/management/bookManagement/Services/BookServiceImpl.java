@@ -6,8 +6,10 @@ import com.management.bookManagement.Entities.Book;
 import com.management.bookManagement.Repositories.BookRepository;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,12 +49,13 @@ public class BookServiceImpl implements BookService{
         return modelMapper.map(book, BookDTO.class);
     }
 
+    @Transactional
     @Override
     public void deleteBook(Long id) {
-        Book book = bookRepository.findById(id).orElseThrow();
-        for(Author author: book.getAuthors()){
-            book.removeAuthor(author);
-        }
+        Book book = bookRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Book not found"));
+        book.getAuthors().forEach(author -> author.getBooks().remove(book));
+        book.getAuthors().clear();
         bookRepository.delete(book);
     }
 
