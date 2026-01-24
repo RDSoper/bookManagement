@@ -12,6 +12,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -120,7 +121,7 @@ class BookServiceImplTest {
     void testDeleteBook_throwsException_whenNoBookFound() {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(NoSuchElementException.class, () -> bookService.deleteBook(1L));
+        assertThrows(ResponseStatusException.class, () -> bookService.deleteBook(1L));
     }
 
     @Test

@@ -4,25 +4,40 @@ import com.management.bookManagement.DTO.AuthorBookDTO;
 import com.management.bookManagement.DTO.AuthorDTO;
 import com.management.bookManagement.Entities.Author;
 import com.management.bookManagement.Entities.Book;
+import com.management.bookManagement.Repositories.AuthorRepository;
+import com.management.bookManagement.Repositories.BookRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.jdbc.Sql;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Sql(scripts = "/AuthorController/AuthorControllerITestSetup.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-@Sql(scripts = "/AuthorController/authorControllerTearDown.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 class AuthorControllerITest {
 
     @Autowired
     private AuthorController authorController;
+
+    @Autowired
+    private AuthorRepository authorRepository;
+
+    @Autowired
+    private BookRepository bookRepository;
+
+    @BeforeEach
+    void setUp() {
+        authorRepository.deleteAll();
+        bookRepository.deleteAll();
+        setUpData();
+    }
 
     @Test
     void getAuthors() {
@@ -53,7 +68,8 @@ class AuthorControllerITest {
 
     @Test
     void getAuthor() {
-        ResponseEntity<AuthorDTO> result = authorController.getAuthor(1L);
+        Author author = authorRepository.findByNameIs("Jane Doe");
+        ResponseEntity<AuthorDTO> result = authorController.getAuthor(author.getId());
         assertThat(result.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(200));
 
         AuthorDTO body = result.getBody();
@@ -104,5 +120,37 @@ class AuthorControllerITest {
 
         author.addBook(book);
         return author;
+    }
+
+    private void setUpData() {
+        Set<Book> books = new HashSet<>();
+        Book book1 = Book.builder()
+                .title("The title")
+                .read(false)
+                .owned(true)
+                .genre("Fiction")
+                .build();
+        books.add(book1);
+
+        Author jane = Author.builder()
+                .name("Jane Doe")
+                .books(books)
+                .build();
+        authorRepository.save(jane);
+
+        Set<Book> moreBooks = new HashSet<>();
+        Book book2 = Book.builder()
+                .title("A title again")
+                .read(true)
+                .owned(false)
+                .genre("Non-Fiction")
+                .build();
+        moreBooks.add(book2);
+
+        Author john = Author.builder()
+                .name("John Smith")
+                .books(moreBooks)
+                .build();
+        authorRepository.save(john);
     }
 }

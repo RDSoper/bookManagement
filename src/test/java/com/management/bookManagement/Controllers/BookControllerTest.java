@@ -6,8 +6,7 @@ import com.management.bookManagement.Services.BookServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -25,8 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(BookController.class)
 class BookControllerTest {
 
     @Autowired
@@ -49,7 +47,7 @@ class BookControllerTest {
     @Test
     void getBooks() throws Exception {
         when(bookService.getBooks()).thenReturn(List.of(book1, book2, book3));
-        String response = getFile("bookControllerResponses/getBooks.json");
+        String response = getFile("bookController/bookControllerResponses/getBooks.json");
 
         mvc.perform(get("/books"))
                 .andExpect(status().isOk())
@@ -60,7 +58,7 @@ class BookControllerTest {
     @Test
     void getBook() throws Exception {
         when(bookService.getBook(1L)).thenReturn(book1);
-        String response = getFile("bookControllerResponses/getBook.json");
+        String response = getFile("bookController/bookControllerResponses/getBook.json");
 
         mvc.perform(get("/1"))
                 .andExpect(status().isOk())
@@ -70,8 +68,8 @@ class BookControllerTest {
 
     @Test
     void saveBook() throws Exception {
-        String book = getFile("bookControllerBodies/saveBook.json");
-        String response = getFile("bookControllerResponses/saveBook.json");
+        String book = getFile("bookController/bookControllerBodies/saveBook.json");
+        String response = getFile("bookController/bookControllerResponses/saveBook.json");
         when(bookService.saveBook(any(Book.class))).thenReturn(book1);
 
         mvc.perform(
