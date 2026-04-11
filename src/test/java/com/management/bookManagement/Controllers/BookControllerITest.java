@@ -46,20 +46,20 @@ class BookControllerITest {
         List<BookDTO> bookListResponse = bookList.getBody().stream().toList();
 
         BookDTO book1 = bookListResponse.getFirst();
-        assertThat(book1.getTitle()).isEqualTo("A title again");
+        assertThat(book1.getTitle()).isEqualTo("title, The");
         assertThat(book1.getAuthors().size()).isEqualTo(1);
-        assertThat(book1.getAuthors().stream().toList().getFirst()).isEqualTo("John Smith");
-        assertThat(book1.getRead()).isEqualTo(true);
-        assertThat(book1.getGenre()).isEqualTo("Non-Fiction");
-        assertThat(book1.getOwned()).isEqualTo(false);
+        assertThat(book1.getAuthors().stream().toList().getFirst()).isEqualTo("Jane Doe");
+        assertThat(book1.getRead()).isEqualTo(false);
+        assertThat(book1.getGenre()).isEqualTo("Fiction");
+        assertThat(book1.getOwned()).isEqualTo(true);
 
         BookDTO book2 = bookListResponse.getLast();
-        assertThat(book2.getTitle()).isEqualTo("title, The");
+        assertThat(book2.getTitle()).isEqualTo("A title again");
         assertThat(book2.getAuthors().size()).isEqualTo(1);
-        assertThat(book2.getAuthors().stream().toList().getFirst()).isEqualTo("Jane Doe");
-        assertThat(book2.getRead()).isEqualTo(false);
-        assertThat(book2.getGenre()).isEqualTo("Fiction");
-        assertThat(book2.getOwned()).isEqualTo(true);
+        assertThat(book2.getAuthors().stream().toList().getFirst()).isEqualTo("John Smith");
+        assertThat(book2.getRead()).isEqualTo(true);
+        assertThat(book2.getGenre()).isEqualTo("Non-Fiction");
+        assertThat(book2.getOwned()).isEqualTo(false);
     }
 
     @Test

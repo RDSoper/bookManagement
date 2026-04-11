@@ -69,7 +69,7 @@ class BookServiceImplTest {
 
     @Test
     void testGetAllBooks_getsBooks() {
-        when(bookRepository.findAllByOrderByTitleAsc()).thenReturn(List.of(book1, book2, book3));
+        when(bookRepository.findAll()).thenReturn(List.of(book1, book2, book3));
 
         List<BookDTO> books = bookService.getBooks();
 

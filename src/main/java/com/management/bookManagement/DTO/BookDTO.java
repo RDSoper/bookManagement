@@ -12,6 +12,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class BookDTO {
 
+    private Long id;
     private String title;
     private Set<String> authors;
     private Boolean read;
